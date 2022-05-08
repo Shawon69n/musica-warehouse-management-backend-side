@@ -22,6 +22,7 @@ async function run(){
         await client.connect();
     const productsCollection = client.db('Musica').collection('products');
 
+    // get all products data 
     app.get('/products', async (req, res) => {
       const query = {};
       const cursor = productsCollection.find(query);
@@ -29,11 +30,25 @@ async function run(){
       res.send(products);
     });
 
+    // get single product data 
     app.get('/products/:id', async (req,res) =>{
         const id = req.params.id;
         const query = {_id: ObjectId(id)};
         const singleProduct = await productsCollection.findOne(query);
         res.send(singleProduct)
+    })
+
+    // update quantity 
+    app.put('/products/:id' , async (req,res)=>{
+        const id = req.params.id;
+        const updatedQuantity = req.body;
+        const filter = {_id: ObjectId(id)};
+        const options = { upsert : true };
+        const updated = {
+            $set : updatedQuantity
+        }
+        const result = await productsCollection.updateOne(filter,updated,options);
+        res.send(result);
     })
 
 
