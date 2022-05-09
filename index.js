@@ -59,7 +59,7 @@ async function run(){
         res.send(result)
     })
 
-    // myProduct 
+    // myProduct api
     app.get('/addproduct',async(req,res) =>{
         const email = req.query.email;  
         const query = {email: email};
