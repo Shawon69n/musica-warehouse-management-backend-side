@@ -21,7 +21,7 @@ async function run(){
     try{
         await client.connect();
     const productsCollection = client.db('Musica').collection('products');
-    const addProductCollection = client.db('Musica').collection('addproduct');
+    // const addProductCollection = client.db('Musica').collection('addproduct');
 
     // get all products data 
     app.get('/products', async (req, res) => {
@@ -53,27 +53,36 @@ async function run(){
     })
 
     //add product
-    app.post('/addproduct' , async (req,res) =>{
+    app.post('/products' , async (req,res) =>{
         const newProduct = req.body;
-        const result = await addProductCollection.insertOne(newProduct);
+        const result = await productsCollection.insertOne(newProduct);
         res.send(result)
     })
 
     // myProduct api
-    app.get('/addproduct',async(req,res) =>{
-        const email = req.query.email;  
-        const query = {email: email};
-        const cursor = addProductCollection.find(query);
-        const result = await cursor.toArray();
-        res.send(result);
+    // app.get('/addproduct',async(req,res) =>{
+    //     const email = req.query.email;  
+    //     const query = {email: email};
+    //     const cursor = addProductCollection.find(query);
+    //     const result = await cursor.toArray();
+    //     res.send(result);
+    // })
+    app.get('/myproducts', async (req, res) => {
+        const email = req.query.email
+        const query = { email: email };
+        const cursor = productsCollection.find(query);
+        const result = await cursor.toArray()
+        res.send(result)
     })
 
-    app.delete('/addproduct/:id' , async (req,res) =>{
-        const id = req.params.id;
-        const deleteQuery = {_id: ObjectId(id)};
-        const result = await addProductCollection.deleteOne(deleteQuery);
-        res.send(result);
+
+
+
+    // checking heroku 
+    app.get('/hero' , (req,res) =>{
+        res.send('im not a hero')
     })
+    
 
 
     //Delete product
